@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<link href="stylesheets/main.css" media="screen" rel="stylesheet" type="text/css"/>
+<!-- https://fontawesome.com/how-to-use/on-the-web/setup/hosting-font-awesome-yourself -->
+<link href="stylesheets/font-awesome/all.css" rel="stylesheet">
+<script src="javascripts/vendor/jquery-3.4.1.min.js"></script>
+<script src="javascripts/empty.js"></script>
+<script src="javascripts/brain.js"></script>
+<script>
+    // this is a way to start immediately in a certain state
+    // state = JSON.parse(`{"controlPane":"process","people":[{"name":"Joe","role":"CMO"},{"name":"Dan","role":"VP R&D"},{"name":"Libia","role":"Designer"},{"name":"Jack","role":"Reaper"}],"involved":[{"name":"Dan","role":"VP R&D"},{"name":"Joe","role":"CMO"},{"name":"Libia","role":"Designer"},{"name":"Jack","role":"Reaper"}],"fields":[{"name":"Treasure Map","type":"text"},{"name":"Priority","type":"text"}],"requester":{"name":"Jack","role":"Reaper"},"subject":"Need a new fork","fieldValues":[{"name":"Treasure Map","value":""},{"name":"Priority","value":""}]}`);
+    // state = JSON.parse(`{"controlPane":"process","currentViewer":{"name":"Ron","role":"CEO"},"people":[{"name":"Joe","role":"Mark"},{"name":"Ron","role":"CEO"}],"history":[],"involved":[{"name":"Joe","role":"Mark"},{"name":"Ron","role":"CEO"}],"fields":[{"name":"Attachment","type":"text","owner":{"name":"Ron","role":"CEO"}},{"name":"Effort","type":"text","owner":{"name":"Joe","role":"Mark"}}],"requester":{"name":"Ron","role":"CEO"},"subject":"Feature","fieldValues":[{"name":"Attachment","value":""},{"name":"Effort","value":""}]}`);
+    // state = JSON.parse(`{"controlPane":"process","currentViewer":{"name":"Joe","role":"Mark"},"people":[{"name":"Joe","role":"Mark"},{"name":"Ron","role":"CEO"},{"name":"Sarah","role":"Designer"},{"name":"Dave","role":"CRO"},{"name":"Bill","role":"Junior PM"}],"history":[{"name":"Dave","role":"CRO","approved":true},{"name":"Sarah","role":"Designer","rejected":true},{"name":"Bill","role":"Junior PM","approved":true}],"involved":[{"name":"Joe","role":"Mark"},{"name":"Ron","role":"CEO"},{"name":"Bill","role":"Junior PM","approved":true},{"name":"Sarah","role":"Designer","rejected":true},{"name":"Dave","role":"CRO","approved":true}],"fields":[{"name":"Attachment","type":"text","owner":{"name":"Ron","role":"CEO"}},{"name":"Effort","type":"text","owner":{"name":"Joe","role":"Mark"}}],"requester":{"name":"Ron","role":"CEO"},"subject":"Feature","fieldValues":[{"name":"Attachment","value":"Large"},{"name":"Effort","value":"3 weeks"}]}`);
+    // state = JSON.parse(`{"controlPane":"process","currentViewer":{"name":"Ron","role":"Junior"},"people":[{"name":"Jay","role":"CMO"},{"name":"Dave","role":"Sales"},{"name":"Julie","role":"Designer"},{"name":"Ron","role":"Junior"}],"involved":[{"name":"Jay","role":"CMO"},{"name":"Dave","role":"Sales"},{"name":"Julie","role":"Designer"},{"name":"Ron","role":"Junior"}],"fields":[{"name":"Design","type":"text","owner":{"name":"Julie","role":"Designer"}},{"name":"Effort","type":"text","owner":{"name":"Dave","role":"Sales"}}],"requester":{"name":"Ron","role":"Junior"},"subject":"Feature","fieldValues":[{"name":"Design","value":""},{"name":"Effort","value":""}],"history":[]}`);
+    // state = JSON.parse(`{"controlPane":"process","currentViewer":{"name":"Jay","role":"CMO","rejected":true},"people":[{"name":"Jay","role":"CMO"},{"name":"Dave","role":"Sales"},{"name":"Julie","role":"Designer"},{"name":"Ron","role":"Junior"}],"involved":[{"name":"Jay","role":"CMO","rejected":true},{"name":"Dave","role":"Sales","approved":true},{"name":"Julie","role":"Designer","approved":true},{"name":"Ron","role":"Junior"}],"fields":[{"name":"Design","type":"text","owner":{"name":"Julie","role":"Designer"},"locked":true},{"name":"Effort","type":"text","owner":{"name":"Dave","role":"Sales"},"locked":true}],"requester":{"name":"Ron","role":"Junior"},"subject":"Feature","fieldValues":[{"name":"Design","value":"Large"},{"name":"Effort","value":"3 weeks"}],"history":[{"name":"Dave","role":"Sales","approved":true},{"name":"Jay","role":"CMO","rejected":true},{"name":"Julie","role":"Designer","approved":true}],"approvalOrder":[{"before":{"name":"Ron","role":"Junior"},"after":{"name":"Dave","role":"Sales","approved":true}},{"before":{"name":"Dave","role":"Sales","approved":true},"after":{"name":"Jay","role":"CMO","rejected":true}}],"lastActionDetails":{"involved":{"name":"Julie","role":"Designer","approved":true},"action":"approve"}}`);
+    state = JSON.parse(`{"controlPane":"process","currentViewer":{"name":"Jay","role":"CMO"},"people":[{"name":"Jay","role":"CMO"},{"name":"Dan","role":"VP R&D"},{"name":"Dave","role":"Sales"},{"name":"Keith","role":"Products"},{"name":"Ron","role":"Junior"}],"involved":[{"name":"Jay","role":"CMO"},{"name":"Dan","role":"VP R&D"},{"name":"Dave","role":"Sales"},{"name":"Keith","role":"Products"},{"name":"Ron","role":"Junior"}],"fields":[{"name":"Effort","type":"text","owner":{"name":"Ron","role":"Junior"}},{"name":"Priority","type":"text","owner":{"name":"Keith","role":"Products"}}],"requester":{"name":"Ron","role":"Junior"},"subject":"Feature","fieldValues":[{"name":"Effort","value":""},{"name":"Priority","value":""}],"approvalOrder":[],"history":[]}`);
+
+    window.addEventListener("load", function(e) {
+        Brain();
+    });
+</script>
+
+<body>
+<div class="control-pane" data-state="">
+    <div class="content" data-state="new"><button id="new-request" class="action-button" type="button">New Request</button></div>
+    <div class="content" data-state="process">
+        <div class="caption">Click to see what is pushed to involved people</div>
+        <div class="people"></div>
+    </div>
+</div>
+<div class="request-pane"></div>
+
+<div class="request-template">
+    <div class="involved">
+        <label class="label">Collaborating:</label>
+        <div class="person-marker placeholder"></div>
+    </div>
+    <div class="approval-order-container">
+        <label class="label">Approval Order</label>
+        <div class="approval-order-content">
+            <div class="approval-order">
+                <div class="person-marker before placeholder"></div>
+                <div class="dashed-line"></div><div class="fa fa-caret-right"></div>
+                <div class="person-marker after placeholder"></div>
+            </div>
+        </div>
+    </div>
+    <div class="horizontal-wrapper">
+        <div class="fields">
+            <div class="field">
+                <label class="label" for="requester-name">Requester:</label>
+                <input class="value" type="text" id="requester-name" readonly/>
+            </div>
+            <div class="field">
+                <label class="label" for="requester-role">Requester role:</label>
+                <input class="value" type="text" id="requester-role" readonly/>
+            </div>
+            <div class="field">
+                <label class="label" for="request-subject">Subject:</label>
+                <input class="value" type="text" id="request-subject" readonly/>
+            </div>
+        </div>
+        <div class="helpers">
+            <div class="link" id="helper-add-person">Add Person</div>
+            <div class="link" id="helper-add-field">Add Field</div>
+            <div class="link approver" id="helper-involve-criteria">Involve me under this criteria</div>
+            <div class="link approver" id="helper-missing-data">Missing data to make a decision</div>
+            <div class="link approver" id="helper-approvers-before">Approver(s) before me</div>
+            <div class="link approver" id="helper-approvers-after">Approver(s) after me</div>
+        </div>
+    </div>
+    <div class="history-section">
+        <label class="label">Request decisions:</label>
+        <div class="history-container"></div>
+    </div>
+    <div class="ready-section">
+        <div class="link ready">I'm done with no action</div>
+    </div>
+    <div class="actions">
+        <button class="action-button approve" type="button">Approve</button>
+        <button class="action-button reject" type="button">Reject</button>
+    </div>
+</div>
+
+<div class="shield"></div>
+<div class="shield2"></div>
+
+<div class="dialog add-person">
+    <div class="caption">Add Person</div>
+
+    <select class="people">
+    </select>
+    <div class="links">
+        <div class="link" id="new-person">New Person</div>
+    </div>
+    <div class="actions">
+        <button class="action-button ok" type="button">Add Person</button>
+        <button class="action-button cancel" type="button">Cancel</button>
+    </div>
+</div>
+
+<div class="dialog new-person">
+    <div class="caption">New Person</div>
+
+    <div class="fields">
+        <div class="field">
+            <label class="label" for="new-person-name">Name:</label>
+            <input class="value" type="text" id="new-person-name"/>
+        </div>
+        <div class="field">
+            <label class="label" for="new-person-role">Role:</label>
+            <input class="value" type="text" id="new-person-role"/>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button class="action-button ok" type="button">Add Person</button>
+        <button class="action-button cancel" type="button">Cancel</button>
+    </div>
+</div>
+
+<div class="person-marker-template">
+    <div class="person-marker">
+        <div class="name"></div>
+        <div class="role"></div>
+    </div>
+</div>
+
+<div class="person-button-template">
+    <div class="person-button">
+        <div class="name"></div>
+        <div class="role"></div>
+    </div>
+</div>
+
+<div class="dialog add-field">
+    <div class="caption">Add Field</div>
+
+    <div class="field">
+        <label class="label" for="new-field-name">Name:</label>
+        <input class="value" type="text" id="new-field-name"/>
+    </div>
+    <div class="field">
+        <label class="label" for="new-field-type">Type:</label>
+        <select class="types" id="new-field-type">
+            <option value="text">Text</option>
+            <option value="number">Number</option>
+            <option value="attachment">Attachment</option>
+        </select>
+    </div>
+    <div class="field">
+        <label class="label" for="new-field-owner">Owner:</label>
+        <select class="people" id="new-field-owner"></select>
+    </div>
+
+    <div class="actions">
+        <button class="action-button ok" type="button">Add Field</button>
+        <button class="action-button cancel" type="button">Cancel</button>
+    </div>
+</div>
+
+<div class="dialog missing-data">
+    <div class="caption">Missing data from someone else</div>
+
+    <div class="field">
+        <label class="label" for="missing-data-field-name">Name:</label>
+        <input class="value" type="text" id="missing-data-field-name"/>
+    </div>
+    <div class="field">
+        <label class="label" for="missing-data-field-type">Type:</label>
+        <select class="types" id="missing-data-field-type">
+            <option value="text">Text</option>
+            <option value="number">Number</option>
+            <option value="attachment">Attachment</option>
+        </select>
+    </div>
+    <div class="field">
+        <label class="label" for="missing-data-owner">Owner:</label>
+        <select class="people" id="missing-data-owner"></select>
+    </div>
+
+    <div class="actions">
+        <button class="action-button ok" type="button">Add Field</button>
+        <button class="action-button cancel" type="button">Cancel</button>
+    </div>
+</div>
+
+<div class="dialog approver-before">
+    <div class="caption">Add Approver before me</div>
+
+    <div class="field">
+        <label class="label" for="approver-before">Approver:</label>
+        <select class="people" id="approver-before"></select>
+    </div>
+
+    <div class="actions">
+        <button class="action-button ok" type="button">Add Approver</button>
+        <button class="action-button cancel" type="button">Cancel</button>
+    </div>
+</div>
+
+<div class="dialog approver-after">
+    <div class="caption">Add Approver after me</div>
+
+    <div class="field">
+        <label class="label" for="approver-after">Approver:</label>
+        <select class="people" id="approver-after"></select>
+    </div>
+
+    <div class="actions">
+        <button class="action-button ok" type="button">Add Approver</button>
+        <button class="action-button cancel" type="button">Cancel</button>
+    </div>
+</div>
+
+<div class="field-template">
+    <div class="field custom">
+        <label class="label"></label>
+        <input class="value" type="text"/>
+    </div>
+</div>
+
+<div class="approval-order-template">
+    <div class="approval-order">
+        <div class="person-marker before">
+            <div class="name"></div>
+            <div class="role"></div>
+        </div>
+        <div class="dashed-line"></div><div class="fa fa-caret-right"></div>
+        <div class="person-marker after">
+            <div class="name"></div>
+            <div class="role"></div>
+        </div>
+    </div>
+</div>
+
+</body>

@@ -1,0 +1,477 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-family: Avenir, sans-serif;
+}
+/* check here */
+
+html
+{
+    height: 100%;
+    /*min-height: 900px;*/
+}
+
+body {
+    height: 100%;
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+    flex-direction: column;
+    background-color: rgb(43,43,43);
+}
+
+label {
+    color: rgb(169,183,199);
+}
+
+body.fixed {
+    position: fixed;
+}
+
+input.value {
+    font-size: 15px;
+    color: #389466;
+    padding: 0 3px 0 3px;
+}
+
+input.value:focus {
+    outline: thin dotted #666;
+}
+
+input.value:read-only {
+    background-color: #AAAAAA;
+}
+
+input.value.required {
+    border: 2px solid red;
+}
+
+.control-pane {
+    display: flex;
+    flex: 0 0 100px;
+    height: 100px;
+    background: lightgray;
+    border-bottom: 1px solid grey;
+    align-items: center;
+    padding: 8px;
+}
+
+.action-button {
+    display: flex;
+    height: 40px;
+    flex: 0 1 auto;
+    background-color: #46B980;
+    color: white;
+    font-size: 12px;
+    padding: 10px;
+}
+
+.action-button:hover {
+    background-color: #389466;
+}
+
+.action-button.reject {
+    background-color: darkred;
+}
+
+.action-button.reject:hover {
+    background-color: rgb(95,0,0);
+}
+
+.action-button.disabled {
+    background-color: #AAAAAA;
+}
+.action-button.disabled:hover {
+    background-color: #AAAAAA;
+}
+
+.action-button:active, .action-button:focus, .action-button:hover {
+    border: solid 1px transparent;
+    /*background: hsla(31,15%,50%,.25);*/
+    text-decoration: none;
+}
+
+.action-button:focus {
+    outline: thin dotted #666;
+}
+
+.person-button {
+    display: flex;
+    height: 36px;
+    flex: 0 1 86px;
+    background-color: #46B980;
+    color: white;
+    font-size: 12px;
+    padding: 10px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    border: 2px solid #46B980;
+}
+
+.person-button.active {
+    border: 2px solid #389466;
+    color: #389466;
+    background-color: white;
+}
+
+.person-button.active:hover {
+    background-color: lightgrey;
+}
+
+.person-button .name {
+    font-weight: bold;
+}
+
+.person-button-template {
+    display: none;
+}
+
+.person-button:hover {
+    background-color: #389466;
+}
+
+.control-pane .content {
+    display: none;
+    flex: 1;
+    padding: 8px 20px 8px 20px;
+}
+
+.control-pane[data-state='new'] .content[data-state='new'] {
+    display: flex;
+}
+
+.control-pane[data-state='process'] .content[data-state='process'] {
+    display: flex;
+}
+
+.content[data-state='process'] .caption {
+    display: flex;
+    flex: 0 0 140px;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    color: #000;
+    margin-right: 20px;
+    font-size: 13px;
+}
+
+.content[data-state='process'] .people {
+    display: flex;
+    flex: 1;
+    align-items: center;
+}
+
+/*
+.content[data-state='process'] .people .person-marker {
+    border-radius: 0;
+    height: 50px;
+}
+*/
+
+.new-request-template, .request-template {
+    display: none;
+}
+
+.request-pane {
+    display: flex;
+    padding: 20px;
+    flex-direction: column;
+    overflow: scroll;
+}
+
+.request-pane.requester .actions, .request-pane.requester .helpers .link.approver {
+    display: none;
+}
+
+.request-pane .actions {
+    display: flex;
+}
+
+.request-pane .actions .action-button {
+    margin-right: 20px;
+}
+
+.involved, .horizontal-wrapper {
+    display: flex;
+}
+
+.involved {
+    flex: 0 0 100px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.involved .label {
+    margin: 5px 30px 5px 5px;
+}
+
+.person-marker-template {
+    display: none;
+}
+
+.person-marker {
+    display: flex;
+    flex: 0 0 80px;
+    height: 80px;
+    max-width: 80px;
+    background-color: rgb(60,63,65);
+    border: 2px solid rgb(60,63,65);
+    border-radius: 43px;
+    flex-direction: column;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    margin-right: 15px;
+}
+
+.person-marker .name, .person-marker .role {
+    white-space: nowrap;
+}
+
+.person-marker .name {
+    font-weight: bold;
+}
+
+.person-marker.placeholder {
+    border-style: dashed;
+    background-color: transparent;
+}
+
+.fields, .helpers {
+    display: flex;
+    flex-direction: column;
+    flex: auto 0;
+}
+
+.fields {
+    margin-right: 40px;
+}
+
+.helpers {
+    align-items: flex-end;
+}
+
+.field {
+    display: flex;
+    margin: 5px;
+    align-items: center;
+}
+
+.field .label {
+    margin-right: 10px;
+}
+
+.link {
+    font-size: 13px;
+    padding: 4px;
+    margin: 4px;
+    color: cornflowerblue;
+    border-radius: 3px;
+}
+
+.link:hover {
+    background-color: lightgrey;
+    cursor: pointer;
+}
+
+.ready-section {
+    display: flex;
+    flex: 0 0 50px;
+    align-items: center;
+}
+
+.link.ready {
+}
+
+.history-section {
+    display: flex;
+    flex: 0 0 40px;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.history-section .label {
+    margin: 5px 30px 5px 5px;
+}
+
+.history-container {
+    display: flex;
+    margin-left: 20px;
+    align-items: center;
+}
+
+.history-container .person-marker {
+    flex: 0 0 60px;
+    height: 60px;
+    margin-left: 15px;
+}
+
+.history-container .dashed-line {
+    display: flex;
+    flex: 0 0 20px;
+    height: 0;
+    border-top: 2px dashed lightslategray;
+    border-bottom: 2px dashed lightslategray;
+}
+
+.history-container .fa {
+    display: flex;
+    align-items: center;
+    font-size: 30px;
+    color: lightslategray;
+}
+
+.history-container .person-marker.approved {
+    flex: 0 0 60px;
+    height: 60px;
+    background-color: #389466;
+    border: 2px solid #389466;
+}
+
+.history-container .person-marker.rejected {
+    flex: 0 0 60px;
+    height: 60px;
+    background-color: darkred;
+    border: 2px solid darkred;
+}
+
+.approval-order-container {
+    display: flex;
+    margin: 20px 0 40px;
+    align-items: center;
+}
+
+.approval-order-container .label {
+    margin: 5px 30px 5px 5px;
+}
+
+.approval-order-content {
+    display: flex;
+    align-items: center;
+}
+
+.approval-order {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.approval-order .person-marker {
+    flex: 0 0 40px;
+    max-height: 40px;
+    min-width: 40px;
+    background-color: dodgerblue;
+    border-color: dodgerblue;
+    margin-right: 0;
+}
+
+.approval-order .person-marker .role {
+    display: none;
+}
+
+.approval-order .dashed-line {
+    display: flex;
+    flex: 0 0 20px;
+    min-width: 20px;
+    border-top: 1px dashed dodgerblue;
+    border-bottom: 1px dashed dodgerblue;
+}
+.approval-order .fa {
+    color: dodgerblue;
+}
+
+.approval-order .person-marker.placeholder {
+    background-color: transparent;
+    border: 2px dashed dodgerblue;
+}
+
+.shield, .shield2 {
+    display: none;
+}
+
+.shield.on, .shield2.on {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.2);
+    /*background-color: transparent;*/
+}
+
+.shield.on {
+    background-color: rgba(0,0,0,0.2);
+}
+
+.dialog {
+    display: none;
+    position:fixed;
+    left:50%;
+    top: 50%;
+    width: 450px;
+    transform: translate(-50%,-50%);
+    flex-direction: column;
+    flex: 1;
+    border: 1px solid #888888;
+    border-radius: 4px;
+    background-color: rgb(74,77,93);
+    padding: 10px;
+}
+
+.dialog.active {
+    display: flex;
+}
+
+.dialog .caption {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 40px;
+    color: white;
+}
+
+.dialog select {
+    margin: 10px;
+    font-size: 15px;
+    color: #389466;
+}
+
+.dialog .links {
+    display: flex;
+}
+
+.dialog .actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.dialog .actions .cancel {
+    margin-left: 30px;
+}
+
+.dialog.new-person .fields {
+    width: 300px;
+    align-self: center;
+}
+
+.dialog .label {
+    color: white;
+}
+.dialog .fields .field {
+    justify-content: space-between;
+}
+
+.field-template {
+    display: none;
+}
+
+.approval-order-template {
+    display: none;
+}
