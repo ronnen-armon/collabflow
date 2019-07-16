@@ -261,6 +261,29 @@ function Brain() {
     });
   }
 
+  function isCircular(beforePerson, afterPerson) {
+    // run a kind of BFS to check if afterPerson could lead to beforePerson
+    var nextApprovers = [afterPerson];
+
+    for (var i=0;i<state.involved.length;i++) {
+      var newNextApprovers = [];
+
+      nextApprovers.forEach(function(p) {
+        state.approvalOrder.forEach(function(o) {
+          if (o.before.name == p.name) newNextApprovers.push(o.after);
+        })
+      });
+
+      if (newNextApprovers.some(function(p) {return p.name == beforePerson.name;})) {
+        return true;
+      }
+
+      nextApprovers = newNextApprovers;
+      if (!nextApprovers.length) return false;
+    }
+    return false;
+  }
+
   function approversBeforeMeHandler() {
     $("#helper-approvers-before").off().on("click",function() {
       $(".shield").addClass("on");
@@ -279,6 +302,10 @@ function Brain() {
       $(".dialog.approver-before .ok").off().on("click",function() {
         var name = $(".dialog.approver-before #approver-before").children("option:selected").val();
         var person = findPerson(state.involved, name);
+        if (isCircular(person, state.currentViewer)) {
+          alert("This requirement causes circular decision cycle. Think again.");
+          return;
+        }
         addApprovalOrder(person, state.currentViewer);
 
         $(".shield").removeClass("on");
@@ -307,6 +334,10 @@ function Brain() {
       $(".dialog.approver-after .ok").off().on("click",function() {
         var name = $(".dialog.approver-after #approver-after").children("option:selected").val();
         var person = findPerson(state.involved, name);
+        if (isCircular(state.currentViewer, person)) {
+          alert("This requirement causes circular decision cycle. Think again.");
+          return;
+        }
         addApprovalOrder(state.currentViewer, person);
 
         $(".shield").removeClass("on");
