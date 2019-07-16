@@ -23,6 +23,8 @@ body {
 
 label {
     color: rgb(169,183,199);
+    display: flex;
+    flex: 0 0 auto;
 }
 
 body.fixed {
@@ -164,13 +166,6 @@ input.value.required {
     align-items: center;
 }
 
-/*
-.content[data-state='process'] .people .person-marker {
-    border-radius: 0;
-    height: 50px;
-}
-*/
-
 .new-request-template, .request-template {
     display: none;
 }
@@ -188,6 +183,7 @@ input.value.required {
 
 .request-pane .actions {
     display: flex;
+    margin-bottom: 20px;
 }
 
 .request-pane .actions .action-button {
@@ -201,7 +197,7 @@ input.value.required {
 .involved {
     flex: 0 0 100px;
     align-items: center;
-    margin-bottom: 20px;
+    margin: 20px 0;
 }
 
 .involved .label {
@@ -216,7 +212,7 @@ input.value.required {
     display: flex;
     flex: 0 0 80px;
     height: 80px;
-    max-width: 80px;
+    width: 80px;
     background-color: rgb(60,63,65);
     border: 2px solid rgb(60,63,65);
     border-radius: 43px;
@@ -248,7 +244,7 @@ input.value.required {
 }
 
 .fields {
-    margin-right: 40px;
+    margin: 15px 40px 15px 0;
 }
 
 .helpers {
@@ -341,7 +337,7 @@ input.value.required {
 
 .approval-order-container {
     display: flex;
-    margin: 20px 0 40px;
+    margin: 30px 0;
     align-items: center;
 }
 
@@ -363,7 +359,7 @@ input.value.required {
 .approval-order .person-marker {
     flex: 0 0 40px;
     max-height: 40px;
-    min-width: 40px;
+    width: 40px;
     background-color: dodgerblue;
     border-color: dodgerblue;
     margin-right: 0;
@@ -474,4 +470,22 @@ input.value.required {
 
 .approval-order-template {
     display: none;
+}
+
+.horizontal-wrapper.strip {
+    justify-content: space-between;
+    border-bottom: 2px solid rgba(80,80,80,0.75);
+}
+
+.strip-legend {
+    display: flex;
+    color: darkgrey;
+    align-items: center;
+    font-size: 40px;
+    text-align: end;
+}
+
+.vertical-wrapper {
+    display: flex;
+    flex-direction: column;
 }

@@ -32,21 +32,27 @@
 <div class="request-pane"></div>
 
 <div class="request-template">
-    <div class="involved">
-        <label class="label">Collaborating:</label>
-        <div class="person-marker placeholder"></div>
+    <div class="horizontal-wrapper strip">
+        <div class="involved">
+            <label class="label">Collaborating:</label>
+            <div class="person-marker placeholder"></div>
+        </div>
+        <div class="strip-legend">WHO IS COLLABORATING</div>
     </div>
-    <div class="approval-order-container">
-        <label class="label">Approval Order</label>
-        <div class="approval-order-content">
-            <div class="approval-order">
-                <div class="person-marker before placeholder"></div>
-                <div class="dashed-line"></div><div class="fa fa-caret-right"></div>
-                <div class="person-marker after placeholder"></div>
+    <div class="horizontal-wrapper strip">
+        <div class="approval-order-container">
+            <label class="label">Approval Order</label>
+            <div class="approval-order-content">
+                <div class="approval-order">
+                    <div class="person-marker before placeholder"></div>
+                    <div class="dashed-line"></div><div class="fa fa-caret-right"></div>
+                    <div class="person-marker after placeholder"></div>
+                </div>
             </div>
         </div>
+        <div class="strip-legend">IN WHAT ORDER</div>
     </div>
-    <div class="horizontal-wrapper">
+    <div class="horizontal-wrapper strip">
         <div class="fields">
             <div class="field">
                 <label class="label" for="requester-name">Requester:</label>
@@ -69,17 +75,26 @@
             <div class="link approver" id="helper-approvers-before">Approver(s) before me</div>
             <div class="link approver" id="helper-approvers-after">Approver(s) after me</div>
         </div>
+        <div class="strip-legend">WHAT IS THE PAYLOAD</div>
     </div>
-    <div class="history-section">
-        <label class="label">Request decisions:</label>
-        <div class="history-container"></div>
+    <div class="horizontal-wrapper strip">
+        <div class="history-section">
+            <label class="label">Request decisions:</label>
+            <div class="history-container"></div>
+        </div>
+        <div class="strip-legend">WHAT WAS DECIDED</div>
     </div>
-    <div class="ready-section">
-        <div class="link ready">I'm done with no action</div>
-    </div>
-    <div class="actions">
-        <button class="action-button approve" type="button">Approve</button>
-        <button class="action-button reject" type="button">Reject</button>
+    <div class="horizontal-wrapper strip">
+        <div class="vertical-wrapper">
+            <div class="ready-section">
+                <div class="link ready">I'm done with no action</div>
+            </div>
+            <div class="actions">
+                <button class="action-button approve" type="button">Approve</button>
+                <button class="action-button reject" type="button">Reject</button>
+            </div>
+        </div>
+        <div class="strip-legend">AVAILABLE ACTIONS</div>
     </div>
 </div>
 
