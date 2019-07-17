@@ -247,8 +247,22 @@ input.value.required {
     margin: 15px 40px 15px 0;
 }
 
+.request-pane .fields {
+    flex: 1 0 auto;
+}
+
+.request-pane .fields .vertical-wrapper {
+    flex-wrap: wrap;
+    flex: 0 0 173px;
+}
+
+.request-pane .fields .vertical-wrapper .field {
+    flex-basis: 19%;
+}
+
 .helpers {
     align-items: flex-end;
+    margin-right: 20px;
 }
 
 .field {

@@ -113,7 +113,7 @@ function Brain() {
       $field.find(".label").text(f.name + ":");
       $field.find("input").attr("data-name", f.name);
       var field = findField(state.fieldValues, f.name);
-      $(".request-pane .fields").append($field.html());
+      $(".request-pane .fields .vertical-wrapper").append($field.html());
       $field = $(`.request-pane .fields .field input[data-name='${f.name}']`);
       if (field) $field.val(field.value);
       if (f.locked || (f.owner && f.owner.name != state.currentViewer.name)) $field.prop("readonly",true);
