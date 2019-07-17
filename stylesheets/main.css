@@ -59,6 +59,15 @@ input.value.required {
     padding: 8px;
 }
 
+.control-pane .content .reset {
+    display: flex;
+    align-items: center;
+}
+#reset {
+    width: 80px;
+    justify-content: center;
+}
+
 .action-button {
     display: flex;
     height: 40px;
@@ -237,13 +246,18 @@ input.value.required {
     background-color: transparent;
 }
 
-.fields, .helpers {
+.request-pane .fields, .helpers {
     display: flex;
     flex-direction: column;
     flex: auto 0;
+    min-height: 173px;
+    max-height: 173px;
 }
 
 .fields {
+    display: flex;
+    flex-direction: column;
+    flex: auto 0;
     margin: 15px 40px 15px 0;
 }
 

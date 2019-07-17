@@ -16,6 +16,20 @@ var state = {
   history: [],
 };
 
+function stateReset() {
+  state.controlPane = 'new';
+  state.currentViewer = null;
+
+  state.people = [];
+  state.involved = [];
+  state.fields = [];
+  state.fieldValues = [];
+  state.approvalOrder = [];
+  state.history = [];
+  state.requester = null;
+  state.subject = "";
+}
+
 function Brain() {
   function renderControlPane() {
     switch (state.controlPane) {
@@ -451,6 +465,15 @@ function Brain() {
     });
   }
 
+  function addResetHandler() {
+    $("#reset").off().on("click",function() {
+      stateReset();
+      var $requestPane = $(".request-pane");
+      $requestPane.empty();
+      $(".control-pane").trigger("brain-process", null);
+    });
+  }
+
   $(".control-pane").on("brain-process", function(event, details) {
     state.lastActionDetails = details;
     renderControlPane();
@@ -477,6 +500,8 @@ function Brain() {
         });
         break;
       case 'process':
+        addResetHandler();
+
         var $requestPane = $(".request-pane");
         $requestPane.empty();
         break;
